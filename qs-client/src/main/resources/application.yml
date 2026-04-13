@@ -1,0 +1,16 @@
+
+
+
+# 项目端口和url根路径
+server:
+  port: 8085
+  servlet:
+    context-path: /
+
+# 环境
+spring:
+  profiles:
+    active: dev
+  config:
+    import: classpath:dev/base.yaml
+
