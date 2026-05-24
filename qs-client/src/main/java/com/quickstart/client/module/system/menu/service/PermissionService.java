@@ -1,6 +1,6 @@
 package com.quickstart.client.module.system.menu.service;
 
-import com.quickstart.base.domain.LoginUser;
+import com.quickstart.common.domain.LoginUser;
 
 public interface PermissionService {
 

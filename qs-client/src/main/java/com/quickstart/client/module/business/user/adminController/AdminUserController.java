@@ -1,14 +1,14 @@
 package com.quickstart.client.module.business.user.adminController;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.quickstart.base.common.annotation.NoNeedLogin;
-import com.quickstart.base.domain.user.dto.AdminLoginRequest;
-import com.quickstart.base.domain.user.dto.AdminUserCreateRequest;
-import com.quickstart.base.domain.user.vo.LoginResponse;
-import com.quickstart.base.domain.user.vo.UserInfoVO;
-import com.quickstart.base.domain.user.User;
-import com.quickstart.base.domain.ResponseDTO;
-import com.quickstart.base.security.SecurityUserContext;
+import com.quickstart.common.annotation.NoNeedLogin;
+import com.quickstart.common.domain.user.dto.AdminLoginRequest;
+import com.quickstart.common.domain.user.dto.AdminUserCreateRequest;
+import com.quickstart.common.domain.user.vo.LoginResponse;
+import com.quickstart.common.domain.user.vo.UserInfoVO;
+import com.quickstart.common.domain.user.User;
+import com.quickstart.common.domain.ResponseDTO;
+import com.quickstart.common.security.SecurityUserContext;
 import com.quickstart.client.module.business.user.service.AuthService;
 import com.quickstart.client.module.business.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,9 +22,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Validated
-@Tag(name = "Admin User")
+@Tag(name = "管理员模块")
 @RestController
-@RequestMapping("/admin/user")
 public class AdminUserController {
 
     @Resource
@@ -34,7 +33,7 @@ public class AdminUserController {
 
 
 
-    @GetMapping("/page")
+    @GetMapping("/admin/page")
     @Operation(summary = "分页查询用户")
     @PreAuthorize("hasAuthority('system:user:list')")
     public ResponseDTO<IPage<UserInfoVO>> page(@RequestParam(defaultValue = "1") @Min(1) long pageNo,
@@ -47,7 +46,7 @@ public class AdminUserController {
         return ResponseDTO.ok(responsePage);
     }
 
-    @GetMapping("/{memberCode}")
+    @GetMapping("/admin/{memberCode}")
     @Operation(summary = "查询用户详情")
     @PreAuthorize("hasAuthority('system:user:query')")
     public ResponseDTO<UserInfoVO> detail(@PathVariable String memberCode) {
@@ -58,7 +57,7 @@ public class AdminUserController {
         return ResponseDTO.ok(UserInfoVO.fromEntity(user));
     }
 
-    @PostMapping
+    @PostMapping("/admin")
     @Operation(summary = "管理员新增用户")
     @PreAuthorize("hasAuthority('system:user:add')")
     public ResponseDTO<UserInfoVO> create(@RequestBody @Valid AdminUserCreateRequest request) {
@@ -66,14 +65,14 @@ public class AdminUserController {
         return new ResponseDTO<>(ResponseDTO.OK_CODE, null, true, "新增成功", UserInfoVO.fromEntity(user));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/admin/user/adminLogin")
     @Operation(summary = "管理员登录")
     @NoNeedLogin
-    public ResponseDTO<LoginResponse> login(@RequestBody @Valid AdminLoginRequest request) {
+    public ResponseDTO<LoginResponse> adminLogin(@RequestBody @Valid AdminLoginRequest request) {
         return new ResponseDTO<>(ResponseDTO.OK_CODE, null, true, "登录成功", authService.adminLogin(request));
     }
 
-    @GetMapping("/me")
+    @GetMapping("/admin/me")
     @Operation(summary = "获取当前管理员信息")
     public ResponseDTO<UserInfoVO> currentUser() {
 
@@ -82,7 +81,7 @@ public class AdminUserController {
         return ResponseDTO.ok(vo);
     }
 
-    @PutMapping("/{memberCode}/status")
+    @PutMapping("/admin/{memberCode}/status")
     @Operation(summary = "更新用户状态")
     @PreAuthorize("hasAuthority('system:user:edit')")
     public ResponseDTO<Void> updateStatus(@PathVariable String memberCode, @RequestParam @NotNull Integer status) {

@@ -1,9 +1,9 @@
 package com.quickstart.client.module.system.role.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.quickstart.base.domain.system.role.Role;
-import com.quickstart.base.domain.system.role.dto.RoleSaveRequest;
-import com.quickstart.base.domain.system.role.vo.RoleView;
+import com.quickstart.common.domain.system.role.Role;
+import com.quickstart.common.domain.system.role.dto.RoleSaveRequest;
+import com.quickstart.common.domain.system.role.vo.RoleView;
 
 public interface RoleService {
 

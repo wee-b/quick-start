@@ -1,8 +1,8 @@
 package com.quickstart.client.module.business.user.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.quickstart.base.domain.user.dto.*;
-import com.quickstart.base.domain.user.User;
+import com.quickstart.common.domain.user.dto.*;
+import com.quickstart.common.domain.user.User;
 
 public interface UserService {
     IPage<User> pageAdminUsers(long pageNo, long pageSize, String userName, String phone, Integer status);

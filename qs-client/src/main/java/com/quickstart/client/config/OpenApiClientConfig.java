@@ -16,12 +16,13 @@ public class OpenApiClientConfig {
     }
 
     @Bean
-    public GroupedOpenApi defaultGroupedOpenApi() {
+    public GroupedOpenApi userGroup() {
         return GroupedOpenApi.builder()
-                .group("default")
-                .displayName("默认")
+                .group("user")
+                .displayName("用户与系统")
                 .pathsToMatch("/**")
-                .packagesToScan("com.quickstart")
+                .packagesToScan("com.quickstart.client")
                 .build();
     }
+
 }

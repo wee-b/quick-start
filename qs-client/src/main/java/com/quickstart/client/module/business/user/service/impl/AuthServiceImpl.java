@@ -1,13 +1,13 @@
 package com.quickstart.client.module.business.user.service.impl;
 
-import com.quickstart.base.domain.user.dto.AdminLoginRequest;
-import com.quickstart.base.domain.user.dto.ClientLoginDTO;
-import com.quickstart.base.domain.user.vo.LoginResponse;
-import com.quickstart.base.domain.user.vo.UserInfoVO;
-import com.quickstart.base.domain.user.User;
-import com.quickstart.base.security.JwtTokenService;
-import com.quickstart.base.security.SecurityUserContext;
-import com.quickstart.base.security.TokenStoreService;
+import com.quickstart.common.domain.user.dto.AdminLoginRequest;
+import com.quickstart.common.domain.user.dto.ClientLoginDTO;
+import com.quickstart.common.domain.user.vo.LoginResponse;
+import com.quickstart.common.domain.user.vo.UserInfoVO;
+import com.quickstart.common.domain.user.User;
+import com.quickstart.common.security.JwtTokenService;
+import com.quickstart.common.security.SecurityUserContext;
+import com.quickstart.common.security.TokenStoreService;
 import com.quickstart.client.module.business.user.service.AuthService;
 import com.quickstart.client.module.business.user.service.UserService;
 import io.jsonwebtoken.Claims;
@@ -51,5 +51,26 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("用户不存在或登录已失效");
         }
         return UserInfoVO.fromEntity(user);
+    }
+
+    /**
+     * 用户登出：从Redis中删除token，使当前登录失效
+     * 优先从上下文获取token，无则根据userCode处理
+     */
+    @Override
+    public void logout(String userCode) {
+        // 1. 从安全上下文获取当前请求的token（推荐：精准注销当前登录的token）
+        String token = SecurityUserContext.getToken();
+
+        // 2. 如果能获取到token，解析出tokenId并注销
+        if (token != null && !token.isEmpty()) {
+            Claims claims = jwtTokenService.parseClaims(token);
+            String tokenId = claims.getId();
+            // 调用我们之前写的注销方法，删除Redis中的token
+            tokenStoreService.logout(tokenId);
+        }
+
+        // 3. 清空当前线程的用户上下文信息
+        SecurityUserContext.clear();
     }
 }

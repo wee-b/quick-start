@@ -1,7 +1,7 @@
 package com.quickstart.client.module.system.menu.service.impl;
 
-import com.quickstart.base.domain.LoginUser;
-import com.quickstart.base.domain.user.User;
+import com.quickstart.common.domain.LoginUser;
+import com.quickstart.common.domain.user.User;
 import com.quickstart.client.module.business.user.service.UserService;
 import com.quickstart.client.module.system.menu.service.PermissionService;
 import com.quickstart.client.module.system.menu.mapper.MenuMapper;

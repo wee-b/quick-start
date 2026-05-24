@@ -1,10 +1,10 @@
 package com.quickstart.client.module.system.menu.adminController;
 
-import com.quickstart.base.domain.ResponseDTO;
-import com.quickstart.base.domain.system.menu.Menu;
-import com.quickstart.base.domain.system.menu.dto.MenuSaveRequest;
-import com.quickstart.base.domain.system.menu.vo.MenuTreeView;
-import com.quickstart.base.domain.system.menu.vo.MenuView;
+import com.quickstart.common.domain.ResponseDTO;
+import com.quickstart.common.domain.system.menu.Menu;
+import com.quickstart.common.domain.system.menu.dto.MenuSaveRequest;
+import com.quickstart.common.domain.system.menu.vo.MenuTreeView;
+import com.quickstart.common.domain.system.menu.vo.MenuView;
 import com.quickstart.client.module.system.menu.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

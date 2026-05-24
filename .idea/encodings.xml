@@ -2,11 +2,17 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/qs-admin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/qs-base/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/qs-base/src/main/resources" charset="UTF-8" />
+
     <file url="file://$PROJECT_DIR$/qs-biz/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/qs-client/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/qs-client/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qs-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qs-common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qs-draw/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qs-draw/src/main/java/com/quickstart/draw/module/draw/controller/DrawController.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qs-draw/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qs-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/qs-gateway/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

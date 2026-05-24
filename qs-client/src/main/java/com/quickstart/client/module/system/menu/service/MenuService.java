@@ -1,8 +1,8 @@
 package com.quickstart.client.module.system.menu.service;
 
-import com.quickstart.base.domain.system.menu.Menu;
-import com.quickstart.base.domain.system.menu.dto.MenuSaveRequest;
-import com.quickstart.base.domain.system.menu.vo.MenuTreeView;
+import com.quickstart.common.domain.system.menu.Menu;
+import com.quickstart.common.domain.system.menu.dto.MenuSaveRequest;
+import com.quickstart.common.domain.system.menu.vo.MenuTreeView;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.quickstart.client.module.system.menu.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.quickstart.base.domain.system.menu.Menu;
+import com.quickstart.common.domain.system.menu.Menu;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

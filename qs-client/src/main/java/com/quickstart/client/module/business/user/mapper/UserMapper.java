@@ -1,7 +1,7 @@
 package com.quickstart.client.module.business.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.quickstart.base.domain.user.User;
+import com.quickstart.common.domain.user.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

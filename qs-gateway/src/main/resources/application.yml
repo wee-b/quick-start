@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+
+  application:
+    name: qs-gateway
+  profiles:
+    active: dev
+
+  # Redis（仅用于 token 校验，使用 Lettuce）
+  data:
+    redis:
+      host: ${qs.redis.host:localhost}
+      port: ${qs.redis.port:6379}
+      database: ${qs.redis.database:0}
+      password: ${qs.redis.password:}
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      routes:
+        # 抽奖服务
+        - id: qs-draw
+          uri: lb://qs-draw
+          predicates:
+            - Path=/client/draw/**, /client/drawCode/**, /client/prize/**
+        # 用户/系统服务（兜底）
+        - id: qs-client
+          uri: lb://qs-client
+          predicates:
+            - Path=/**
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials

@@ -1,9 +1,9 @@
 package com.quickstart.client.module.system.menu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.quickstart.base.domain.system.menu.Menu;
-import com.quickstart.base.domain.system.menu.dto.MenuSaveRequest;
-import com.quickstart.base.domain.system.menu.vo.MenuTreeView;
+import com.quickstart.common.domain.system.menu.Menu;
+import com.quickstart.common.domain.system.menu.dto.MenuSaveRequest;
+import com.quickstart.common.domain.system.menu.vo.MenuTreeView;
 import com.quickstart.client.module.system.menu.mapper.MenuMapper;
 import com.quickstart.client.module.system.menu.service.MenuService;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.quickstart.client.config;
 
-import com.quickstart.client.interceptor.LoginInterceptor;
+import com.quickstart.client.interceptor.GatewayAuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -8,15 +8,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    private final LoginInterceptor loginInterceptor;
+    private final GatewayAuthInterceptor gatewayAuthInterceptor;
 
-    public WebMvcConfig(LoginInterceptor loginInterceptor) {
-        this.loginInterceptor = loginInterceptor;
+    public WebMvcConfig(GatewayAuthInterceptor gatewayAuthInterceptor) {
+        this.gatewayAuthInterceptor = gatewayAuthInterceptor;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)
+        registry.addInterceptor(gatewayAuthInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/login",

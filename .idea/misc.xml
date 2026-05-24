@@ -5,9 +5,11 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/qs-base/pom.xml" />
+
         <option value="$PROJECT_DIR$/qs-client/pom.xml" />
         <option value="$PROJECT_DIR$/qs-admin/pom.xml" />
+        <option value="$PROJECT_DIR$/qs-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/qs-draw/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

@@ -1,14 +1,14 @@
 package com.quickstart.client.module.business.user.clientController;
 
-import com.quickstart.base.common.annotation.NoNeedLogin;
-import com.quickstart.base.domain.user.dto.ClientLoginDTO;
-import com.quickstart.base.domain.user.dto.ClientRegisterDTO;
-import com.quickstart.base.domain.user.dto.UpdateInfoDTO;
-import com.quickstart.base.domain.user.vo.LoginResponse;
-import com.quickstart.base.domain.user.vo.UserInfoVO;
-import com.quickstart.base.domain.user.User;
-import com.quickstart.base.domain.ResponseDTO;
-import com.quickstart.base.security.SecurityUserContext;
+import com.quickstart.common.annotation.NoNeedLogin;
+import com.quickstart.common.domain.user.dto.ClientLoginDTO;
+import com.quickstart.common.domain.user.dto.ClientRegisterDTO;
+import com.quickstart.common.domain.user.dto.UpdateInfoDTO;
+import com.quickstart.common.domain.user.vo.LoginResponse;
+import com.quickstart.common.domain.user.vo.UserInfoVO;
+import com.quickstart.common.domain.user.User;
+import com.quickstart.common.domain.ResponseDTO;
+import com.quickstart.common.security.SecurityUserContext;
 import com.quickstart.client.module.business.user.service.AuthService;
 import com.quickstart.client.module.business.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Validated
-@Tag(name = "Client User")
+@Tag(name = "user模块")
 @RestController
 public class ClientUserController {
 
@@ -67,6 +67,15 @@ public class ClientUserController {
         log.info("收到请求：/client/user/updateInfo");
         String userCode = SecurityUserContext.getCurrentMemberCode();
         userService.updateInfo(userCode,updateInfoDTO);
+        return ResponseDTO.ok();
+    }
+
+    @PostMapping("/client/user/logout")
+    @Operation(summary = "退出登录")
+    public ResponseDTO<Void> logout() {
+        log.info("收到请求：/client/user/logout");
+        String userCode = SecurityUserContext.getCurrentMemberCode();
+        authService.logout(userCode);
         return ResponseDTO.ok();
     }
 

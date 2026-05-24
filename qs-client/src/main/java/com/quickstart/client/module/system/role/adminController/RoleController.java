@@ -1,10 +1,10 @@
 package com.quickstart.client.module.system.role.adminController;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.quickstart.base.domain.ResponseDTO;
-import com.quickstart.base.domain.system.role.Role;
-import com.quickstart.base.domain.system.role.dto.RoleSaveRequest;
-import com.quickstart.base.domain.system.role.vo.RoleView;
+import com.quickstart.common.domain.ResponseDTO;
+import com.quickstart.common.domain.system.role.Role;
+import com.quickstart.common.domain.system.role.dto.RoleSaveRequest;
+import com.quickstart.common.domain.system.role.vo.RoleView;
 import com.quickstart.client.module.system.role.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

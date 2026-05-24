@@ -1,0 +1,10 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    active: dev
+  config:
+    import: classpath:dev/base.yaml    # 复用 qs-common 的 common.yaml
