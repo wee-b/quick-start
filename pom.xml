@@ -35,7 +35,7 @@
         <jjwt.version>0.12.6</jjwt.version>
 
         <knife4j.version>4.6.0</knife4j.version>
-        <swagger.version>2.2.22</swagger.version>
+        <swagger.version>2.2.25</swagger.version>
         <fastjson.version>2.0.57</fastjson.version>
         <druid.version>1.2.25</druid.version>
         <redisson.version>3.44.0</redisson.version>
@@ -135,11 +135,11 @@
                 <version>${swagger.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.xingfudeshi</groupId>
-                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.github.xingfudeshi</groupId>-->
+<!--                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>-->
+<!--                <version>${knife4j.version}</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -161,10 +161,11 @@
 
             <!-- Knife4j 网关聚合 -->
             <dependency>
-                <groupId>com.github.xingfudeshi</groupId>
-                <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
-                <version>4.6.0</version>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>4.4.0</version>
             </dependency>
+
 
             <dependency>
                 <groupId>org.redisson</groupId>

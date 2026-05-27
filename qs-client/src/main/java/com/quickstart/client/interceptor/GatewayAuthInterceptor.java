@@ -6,7 +6,7 @@ import com.quickstart.common.domain.ErrorCode;
 import com.quickstart.common.domain.LoginUser;
 import com.quickstart.common.domain.ResponseDTO;
 import com.quickstart.common.security.SecurityUserContext;
-import com.quickstart.client.module.system.menu.service.PermissionService;
+import com.quickstart.client.module.menu.service.PermissionService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

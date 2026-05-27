@@ -52,7 +52,10 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             "/doc.html",
             "/webjars/**",
             "/v3/api-docs/**",
-            "/swagger-resources/**"
+            "/swagger-resources/**",
+            "/client/v3/api-docs/**",   // Knife4j 网关聚合
+            "/draw/v3/api-docs/**",     // Knife4j 网关聚合
+            "/favicon.ico"
     );
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
