@@ -2,6 +2,8 @@ package com.quickstart.draw.module.draw.service.impl;
 
 import cn.hutool.core.lang.Snowflake;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quickstart.common.domain.ErrorCode;
 import com.quickstart.common.domain.draw.Draw;
 
@@ -17,6 +19,8 @@ import com.quickstart.draw.module.draw.service.DrawService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,28 +40,78 @@ public class DrawServiceImpl implements DrawService {
     private Snowflake snowflake;
     @Autowired
     private StringRedisTemplate redisTemplate;
+    @Resource
+    private CacheManager cacheManager;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private static final String OFFICIAL_DRAW_CACHE_KEY = "cache:officialDraws";
+    private static final String CAFFEINE_NAME = "officialDraws";
 
 
     /**
-     * 获取官方抽奖
-     * @return
+     * 获取官方抽奖（L1 Caffeine → L2 Redis → L3 MySQL）
      */
     @Override
     public List<DrawSmallVO> getOfficialDraw() {
 
+        // ===== L1: Caffeine 本地缓存 =====
+        Cache caffeineCache = cacheManager.getCache(CAFFEINE_NAME);
+        if (caffeineCache != null) {
+            Cache.ValueWrapper wrapper = caffeineCache.get(OFFICIAL_DRAW_CACHE_KEY);
+            if (wrapper != null) {
+                return (List<DrawSmallVO>) wrapper.get();
+            }
+        }
+
+        // ===== L2: Redis 分布式缓存 =====
+        String redisJson = redisTemplate.opsForValue().get(OFFICIAL_DRAW_CACHE_KEY);
+        if (redisJson != null) {
+            try {
+                List<DrawSmallVO> cached = objectMapper.readValue(redisJson,
+                        new TypeReference<List<DrawSmallVO>>() {});
+                if (caffeineCache != null) {
+                    caffeineCache.put(OFFICIAL_DRAW_CACHE_KEY, cached);
+                }
+                return cached;
+            } catch (Exception e) {
+                // JSON 解析异常，跳过缓存回源 DB
+            }
+        }
+
+        // ===== L3: MySQL =====
         LambdaQueryWrapper<Draw> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Draw::getPublisherUserId,0);
+        queryWrapper.eq(Draw::getPublisherUserId, 0);
         queryWrapper.eq(Draw::getStatus, DrawConstants.DRAW_STATUS_RUNNING);
-        queryWrapper.eq(Draw::getDeletedFlag,0);
+        queryWrapper.eq(Draw::getDeletedFlag, 0);
         queryWrapper.orderByDesc(Draw::getCreateTime);
 
         List<Draw> draws = drawMapper.selectList(queryWrapper);
-        List<DrawSmallVO> officialDraws = draws.stream().map(one->{
+        List<DrawSmallVO> officialDraws = draws.stream().map(one -> {
             DrawSmallVO vo = new DrawSmallVO();
-            BeanUtils.copyProperties(one,vo);
+            BeanUtils.copyProperties(one, vo);
             return vo;
         }).toList();
+
+        // 回填 L2 + L1
+        try {
+            String json = objectMapper.writeValueAsString(officialDraws);
+            redisTemplate.opsForValue().set(OFFICIAL_DRAW_CACHE_KEY, json, 5, TimeUnit.MINUTES);
+        } catch (Exception ignored) {
+        }
+        if (caffeineCache != null) {
+            caffeineCache.put(OFFICIAL_DRAW_CACHE_KEY, officialDraws);
+        }
+
         return officialDraws;
+    }
+
+    private void evictOfficialDrawCache() {
+        redisTemplate.delete(OFFICIAL_DRAW_CACHE_KEY);
+        Cache caffeineCache = cacheManager.getCache(CAFFEINE_NAME);
+        if (caffeineCache != null) {
+            caffeineCache.evict(OFFICIAL_DRAW_CACHE_KEY);
+        }
     }
 
     /**
@@ -94,6 +148,9 @@ public class DrawServiceImpl implements DrawService {
         draw.setUpdateTime(LocalDateTime.now());
 
         drawMapper.insert(draw);
+
+        // 清缓存
+        evictOfficialDrawCache();
 
         // 组装返回VO（完全按你要求的字段）
         DrawVO vo = new DrawVO();
@@ -157,6 +214,8 @@ public class DrawServiceImpl implements DrawService {
 
         drawMapper.updateById(draw);
 
+        evictOfficialDrawCache();
+
         DrawVO vo = new DrawVO();
         BeanUtils.copyProperties(draw, vo);
         return vo;
@@ -179,6 +238,8 @@ public class DrawServiceImpl implements DrawService {
         draw.setDeletedFlag(1);
         draw.setUpdateTime(LocalDateTime.now());
         drawMapper.updateById(draw);
+
+        evictOfficialDrawCache();
     }
 
     @Override
@@ -198,6 +259,8 @@ public class DrawServiceImpl implements DrawService {
         draw.setStatus(DrawConstants.DRAW_STATUS_RUNNING);
         draw.setUpdateTime(LocalDateTime.now());
         drawMapper.updateById(draw);
+
+        evictOfficialDrawCache();
     }
 
     @Override

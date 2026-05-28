@@ -42,19 +42,14 @@ import java.util.List;
 @Component
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
-    private static final List<String> EXCLUDE_PATHS = List.of(
-            "/client/user/login",
-            "/client/user/register",
-            "/admin/user/adminLogin",
-            "/testConnection",
-            "/client/draw/getOfficialDraw",
-            "/client/prize/getPrizesByDrawId",
+    /** 仅拦截静态资源/文档路径，业务接口无论有无 token 都放行 */
+    private static final List<String> STATIC_PATHS = List.of(
             "/doc.html",
             "/webjars/**",
             "/v3/api-docs/**",
             "/swagger-resources/**",
-            "/client/v3/api-docs/**",   // Knife4j 网关聚合
-            "/draw/v3/api-docs/**",     // Knife4j 网关聚合
+            "/client/v3/api-docs/**",
+            "/draw/v3/api-docs/**",
             "/favicon.ico"
     );
 
@@ -82,18 +77,18 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);
         }
 
-        // 2. 白名单路径直接放行
-        if (isExcluded(path)) {
+        // 2. 静态资源/文档直接放行
+        if (isStaticResource(path)) {
             return chain.filter(exchange);
         }
 
-        // 3. 提取 token
+        // 3. 提取 token —— 没有 token 就透传，交给下游 @NoNeedLogin 决定
         String token = extractToken(request);
         if (token == null) {
-            return writeUnauthorized(exchange, "未登录或 token 缺失");
+            return chain.filter(exchange);
         }
 
-        // 4. 解析 JWT
+        // 4. 解析 JWT（有 token 但无效 → 401，让调用方知道 token 有问题）
         Claims claims;
         try {
             claims = Jwts.parser()
@@ -114,8 +109,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                     if (!memberCode.equals(redisMemberCode)) {
                         return writeUnauthorized(exchange, "登录已失效");
                     }
-
-                    // 6. 转发 memberCode 到下游，并在 header 中传递 token
+                    // 6. token 有效，注入 header 给下游
                     ServerHttpRequest modifiedRequest = request.mutate()
                             .header("X-User-Code", memberCode)
                             .header("X-Token-Id", tokenId)
@@ -127,13 +121,13 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return -100;  // 高优先级
+        return -100;
     }
 
     // ===== 辅助方法 ======
 
-    private boolean isExcluded(String path) {
-        return EXCLUDE_PATHS.stream().anyMatch(p -> pathMatcher.match(p, path));
+    private boolean isStaticResource(String path) {
+        return STATIC_PATHS.stream().anyMatch(p -> pathMatcher.match(p, path));
     }
 
     private String extractToken(ServerHttpRequest request) {

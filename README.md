@@ -34,6 +34,18 @@
 ### 请求流程
 
 ```
+
+网关 AuthGlobalFilter:
+  无 token → 透传（不注入 X-User-Code）
+  有 token → 验签 → 注入 X-User-Code → 透传
+  token 无效 → 401
+
+下游 GatewayAuthInterceptor:
+  @NoNeedLogin → 放行
+  无注解 + 无 X-User-Code → 401
+  无注解 + 有 X-User-Code → 查权限 → 放行
+
+
 客户端 → Gateway（JWT 验签 + Redis 校验 token 有效性）
               │
               ├─ 放行 X-User-Code / X-Token-Id header

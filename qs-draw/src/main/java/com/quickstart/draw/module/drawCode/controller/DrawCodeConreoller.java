@@ -1,5 +1,6 @@
 package com.quickstart.draw.module.drawCode.controller;
 
+import com.quickstart.common.annotation.RateLimit;
 import com.quickstart.common.domain.LoginUser;
 import com.quickstart.common.domain.ResponseDTO;
 import com.quickstart.common.domain.drawCode.vo.DrawCodeVO;
@@ -22,6 +23,7 @@ public class DrawCodeConreoller {
     private DrawCodeService drawCodeService;
 
 
+    @RateLimit(key = "joinDraw", permits = 100)
     @PostMapping("/client/drawCode/join")
     @Operation(summary = "参与抽签")
     public ResponseDTO<List<String>> join(@RequestParam("drawId") Long drawId) {
